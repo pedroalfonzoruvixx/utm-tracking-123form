@@ -1,24 +1,17 @@
-function getReferrer() {
-  var queryString = window.location.search;
-  var urlParams = new URLSearchParams(queryString);
+(function () {
+  const controls = loader.getEngine().getDocument().getControlsList();
 
-  var utmSource = urlParams.get('utm_source');
-  var utmMedium = urlParams.get('utm_medium');
-  var utmCampaign = urlParams.get('utm_campaign');
+  const targetIds = [119209168, 119209170, 119209171];
 
-  try {
-    loader.engine.document.getElementById(119209168).setValue({ value: utmSource });
-    loader.engine.document.getElementById(119209170).setValue({ value: utmMedium });
-    loader.engine.document.getElementById(119209171).setValue({ value: utmCampaign });
-
-    console.log('✅ UTM valores asignados correctamente');
-  } catch (e) {
-    console.error('❌ Error al asignar valores con loader.engine:', e);
-  }
-}
-
-window.addEventListener('load', getReferrer);
-
-
+  targetIds.forEach(id => {
+    const control = controls.find(c => c.id === id);
+    if (control) {
+      control.setValue({ value: `valor para ${id}` });
+      console.log(`✅ Campo ${id} modificado`);
+    } else {
+      console.warn(`⚠️ Campo ${id} no encontrado`);
+    }
+  });
+})();
 
 
