@@ -1,45 +1,35 @@
 (function () {
-  console.log('✅ Script UTM cargado desde GitHub');
+  console.log('🔍 Script cargado desde URL externa');
 
-  const UTM_MAP = {
-    utm_source: '119209168',
-    utm_medium: '119209170',
-    utm_campaign: '119209171'
-  };
-
-  const params = new URLSearchParams(window.location.search);
-  let attempts = 0;
+  const targetId = '119209168';
   const maxAttempts = 20;
+  let attempts = 0;
 
-  function tryFillFields() {
-    let allFound = true;
+  function findField() {
+    const el = document.getElementById(targetId);
 
-    Object.entries(UTM_MAP).forEach(([utmKey, fieldId]) => {
-      const value = params.get(utmKey);
-      const input = document.getElementById(fieldId);
+    if (el) {
+      console.log(`✅ Elemento con id="${targetId}" encontrado:`, el);
 
-      console.log(`🔍 Buscando campo con id: ${fieldId}`);
-      console.log(`🔗 Valor UTM (${utmKey}): ${value}`);
-      console.log(`📦 Campo encontrado:`, input);
-
-      if (input && value) {
-        input.value = value;
-        console.log(`✅ Campo ${fieldId} rellenado con: ${value}`);
+      const input = el.querySelector('input, select, textarea');
+      if (input) {
+        console.log('📦 Campo dentro del contenedor:', input);
+        input.value = 'valor-de-prueba'; // Puedes cambiar esto por cualquier valor
       } else {
-        console.warn(`⏳ Campo ${fieldId} no disponible aún`);
-        allFound = false;
+        console.warn('⚠️ No se encontró campo dentro del contenedor');
       }
-    });
-
-    if (!allFound && attempts < maxAttempts) {
-      attempts++;
-      setTimeout(tryFillFields, 300);
-    } else if (!allFound) {
-      console.error('❌ No se pudieron rellenar todos los campos después de varios intentos.');
+    } else {
+      console.warn(`⏳ Intento ${attempts + 1}: el elemento aún no está disponible`);
+      if (attempts < maxAttempts) {
+        attempts++;
+        setTimeout(findField, 300);
+      } else {
+        console.error('❌ No se encontró el elemento después de varios intentos');
+      }
     }
   }
 
-  tryFillFields();
+  findField();
 })();
 
 
