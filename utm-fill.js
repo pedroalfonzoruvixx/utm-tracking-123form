@@ -1,11 +1,16 @@
 (function () {
-  const UTM_KEYS = ['utm_source', 'utm_campaign', 'utm_medium', 'utm_id'];
+  const UTM_MAP = {
+    utm_source: 'lead_source',
+    utm_medium: 'lead_medium',
+    utm_campaign: 'lead_campaign'
+  };
+
   const params = new URLSearchParams(window.location.search);
 
-  UTM_KEYS.forEach(key => {
-    const value = params.get(key);
+  Object.entries(UTM_MAP).forEach(([utmKey, fieldName]) => {
+    const value = params.get(utmKey);
     if (value) {
-      const input = document.querySelector(`input[name*="${key}"]`);
+      const input = document.querySelector(`input[name="${fieldName}"]`);
       if (input) input.value = value;
     }
   });
